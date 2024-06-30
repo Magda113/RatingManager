@@ -25,6 +25,7 @@ namespace WebApi
             builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
             builder.Services.AddScoped<IRepository<Rating>, RatingRepository>();
             builder.Services.AddScoped<SeriLogRepository>();
+            builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
             var app = builder.Build();
 

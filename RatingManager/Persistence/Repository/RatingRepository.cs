@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Repository
 {
-    public class RatingRepository : IRepository<Rating>
+    public class RatingRepository : IRepository<Rating>, IRatingRepository
     {
         private IDapperContext _context;
         public RatingRepository(IDapperContext context)
@@ -63,6 +63,20 @@ namespace Persistence.Repository
             {
                 var affectedRows = await connection.ExecuteAsync("DELETE FROM Ratings WHERE RatingId = @RatingId", new { RatingId = ratingId });
                 return affectedRows > 0;
+            }
+        }
+
+        public async Task<IEnumerable<int>> GetRatingIdsByCategoryNameAsync(string categoryName)
+        {
+            var sql = @"
+            SELECT r.RatingId
+            FROM Ratings r
+            INNER JOIN Categories c ON r.CategoryId = c.CategoryId
+            WHERE c.Name = @CategoryName";
+
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QueryAsync<int>(sql, new { CategoryName = categoryName });
             }
         }
     }

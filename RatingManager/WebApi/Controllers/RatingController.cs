@@ -15,11 +15,13 @@ namespace WebApi.Controllers
     {
         private readonly IRepository<Rating> _repository;
         private readonly ILogger<RatingController> _logger;
+        private readonly IRatingRepository _ratingRepository;
 
-        public RatingController(IRepository<Rating> repository, ILogger<RatingController> logger)
+        public RatingController(IRepository<Rating> repository, ILogger<RatingController> logger, IRatingRepository ratingRepository)
         {
             _repository = repository;
             _logger = logger;
+            _ratingRepository = ratingRepository;
         }
 
         [HttpGet]
@@ -109,6 +111,21 @@ namespace WebApi.Controllers
             }
             _logger.LogInformation($"Ocena o id {id} została usunięta");
             return NoContent();
+        }
+
+
+        [HttpGet("ByCategoryName/{categoryName}")]
+        public async Task<IActionResult> GetRatingsByCategoryName(string categoryName)
+        {
+            var ratingIds = await _ratingRepository.GetRatingIdsByCategoryNameAsync(categoryName);
+            if (ratingIds == null || !ratingIds.Any())
+            {
+                _logger.LogInformation($"Nie ma ocen z kategorią {categoryName}");
+                return NotFound();
+            }
+
+            _logger.LogInformation($"Otrzymano oceny z kategorią {categoryName}");
+            return Ok(ratingIds);
         }
     }
 }
