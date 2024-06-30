@@ -10,7 +10,7 @@ namespace Domain.Models
     public class Rating
     {
         public int RatingId { get; set; }
-        public int Status { get; set; }
+        public RatingStatus Status { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public int? ModifiedBy { get; set; }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Models;
 
 namespace Domain.DTO
 {
@@ -17,7 +18,7 @@ namespace Domain.DTO
         [StringLength(100)]
         public string Email { get; set; }
         [Required]
-        public int Role { get; set; }
+        public UserRole Role { get; set; }
         [Required]
         [StringLength(100)]
         public string Department { get; set; }

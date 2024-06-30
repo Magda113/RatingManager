@@ -8,7 +8,7 @@ namespace Domain.Models
 {
     public enum UserRole
     {
-        User,
-        Administrator
+        User = 1,
+        Administrator = 2
     }
 }

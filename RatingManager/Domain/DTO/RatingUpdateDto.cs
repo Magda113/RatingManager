@@ -31,6 +31,6 @@ namespace Domain.DTO
         [Required]
         public int Result { get; set; }
         public int CategoryId { get; set; }
-        public int Status { get; set; }
+        public RatingStatus Status { get; set; }
     }
 }

@@ -71,7 +71,8 @@ namespace WebApi.Controllers
                 Email = user.Email,
                 Department = user.Department,
                 Role = user.Role,
-                PasswordHash = user.PasswordHash
+                PasswordHash = user.PasswordHash,
+                ModifiedBy = user.ModifiedBy
             };
             var result = await _repository.UpdateAsync(newUser);
             if (!result)

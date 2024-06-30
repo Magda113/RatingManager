@@ -44,7 +44,8 @@ namespace WebApi.Controllers
             var newCategory = new Category()
             {
                 Name = category.Name,
-                CreatedBy = category.CreatedBy
+                CreatedBy = category.CreatedBy,
+                Status = CategoryStatus.Active
             };
             var createdCategoryId = await _repository.AddAsync(newCategory);
             _logger.LogInformation($"Kategoria {newCategory.Name} została dodana do bazy danych.");

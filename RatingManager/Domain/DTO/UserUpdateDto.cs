@@ -19,7 +19,7 @@ namespace Domain.DTO
         [StringLength(100)]
         public string Email { get; set; }
         [Required]
-        public int Role { get; set; }
+        public UserRole Role { get; set; }
         [Required]
         [StringLength(100)]
         public string Department { get; set; }
