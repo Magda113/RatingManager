@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Domain.DTO;
 using Domain.Models;
 using Persistence.Context;
 using System;
@@ -66,17 +67,17 @@ namespace Persistence.Repository
             }
         }
 
-        public async Task<IEnumerable<int>> GetRatingIdsByCategoryNameAsync(string categoryName)
+        public async Task<IEnumerable<RatingDto>> GetRatingsByCategoryNameAsync(string categoryName)
         {
             var sql = @"
-            SELECT r.RatingId
+            SELECT r.RatingId, r.Safety, r.Knowledge, r.Communication, r.Creativity, r.TechnicalAspects, r.Result
             FROM Ratings r
             INNER JOIN Categories c ON r.CategoryId = c.CategoryId
             WHERE c.Name = @CategoryName";
 
             using (var connection = _context.CreateConnection())
             {
-                return await connection.QueryAsync<int>(sql, new { CategoryName = categoryName });
+                return await connection.QueryAsync<RatingDto>(sql, new { CategoryName = categoryName });
             }
         }
     }

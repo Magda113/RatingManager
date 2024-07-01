@@ -10,11 +10,14 @@ namespace Domain.DTO
 {
     public class RatingUpdateDto
     {
+        [Required]
         public int RatingId { get; set; }
+        [Required]
         public int ModifiedBy { get; set; }
         [Required]
         [Display(Name = "Numer rozmowy")]
         public string CallId { get; set; }
+        [Required]
         public int UserId { get; set; }
         [MaxLength(1000)]
         [Display(Name = "Bezpieczeństwo")]

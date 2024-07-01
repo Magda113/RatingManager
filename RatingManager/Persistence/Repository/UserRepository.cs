@@ -5,7 +5,7 @@ using Dapper;
 
 namespace Persistence.Repository
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IRepository<User>, IUserRepository
     {
         private IDapperContext _context;
         public UserRepository(IDapperContext context)
@@ -58,6 +58,16 @@ namespace Persistence.Repository
             {
                 var affectedRows = await connection.ExecuteAsync("DELETE FROM Users WHERE UserId = @UserId", new { UserId = userId });
                 return affectedRows > 0;
+            }
+        }
+
+        public async Task<User?> Authenticate(string userName, string password)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                var sql = "SELECT UserId, UserName, Email, Role FROM Users WHERE UserName = @UserName AND PasswordHash = @Password";
+                var user = await connection.QuerySingleOrDefaultAsync<User>(sql, new { userName, password });
+                return user;
             }
         }
     }

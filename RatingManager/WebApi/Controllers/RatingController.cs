@@ -117,15 +117,15 @@ namespace WebApi.Controllers
         [HttpGet("ByCategoryName/{categoryName}")]
         public async Task<IActionResult> GetRatingsByCategoryName(string categoryName)
         {
-            var ratingIds = await _ratingRepository.GetRatingIdsByCategoryNameAsync(categoryName);
-            if (ratingIds == null || !ratingIds.Any())
+            var ratings = await _ratingRepository.GetRatingsByCategoryNameAsync(categoryName);
+            if (ratings == null || !ratings.Any())
             {
-                _logger.LogInformation($"Nie ma ocen z kategorią {categoryName}");
+                _logger.LogInformation($"Nie ma ocen z kjategorią {categoryName}");
                 return NotFound();
             }
 
             _logger.LogInformation($"Otrzymano oceny z kategorią {categoryName}");
-            return Ok(ratingIds);
+            return Ok(ratings);
         }
     }
 }

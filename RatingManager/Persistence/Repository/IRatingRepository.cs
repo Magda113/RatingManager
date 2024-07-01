@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.DTO;
+using Domain.Models;
+
 
 namespace Persistence.Repository
 {
     public interface IRatingRepository
     {
-        Task<IEnumerable<int>> GetRatingIdsByCategoryNameAsync(string categoryName);
+        Task<IEnumerable<RatingDto>> GetRatingsByCategoryNameAsync(string categoryName);
     }
 }

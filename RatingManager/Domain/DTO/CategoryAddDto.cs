@@ -11,7 +11,9 @@ namespace Domain.DTO
     public class CategoryAddDto
     {
         [StringLength(255)]
+        [Required]
         public string Name { get; set; }
+        [Required]
         public int CreatedBy { get; set; }
     }
 }
