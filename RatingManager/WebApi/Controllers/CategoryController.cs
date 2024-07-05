@@ -1,5 +1,6 @@
 ﻿using Domain.DTO;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Repository;
 
@@ -37,9 +38,10 @@ namespace WebApi.Controllers
             _logger.LogInformation($"Pobrano kategorię {category.Name}.");
             return Ok(category);
         }
-        
+
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CategoryAddDto category)
+        public async Task<IActionResult> Add([FromBody] AddCategoryDto category)
         {
             var newCategory = new Category()
             {
@@ -52,8 +54,9 @@ namespace WebApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdCategoryId }, category);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] CategoryUpdateDto category)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateCategoryDto category)
         {
             if (id != category.CategoryId)
             {
@@ -77,6 +80,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

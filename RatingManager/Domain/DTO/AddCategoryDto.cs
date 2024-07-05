@@ -8,16 +8,12 @@ using System.Threading.Tasks;
 
 namespace Domain.DTO
 {
-    public class CategoryUpdateDto
+    public class AddCategoryDto
     {
-        [Required]
-        public int CategoryId { get; set; }
+        [StringLength(255)]
         [Required]
         public string Name { get; set; }
         [Required]
-        public CategoryStatus Status { get; set; }
-        [Required]
-        public int ModifiedBy { get; set; }
-
+        public int CreatedBy { get; set; }
     }
 }

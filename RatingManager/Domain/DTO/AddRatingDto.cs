@@ -8,12 +8,10 @@ using System.Threading.Tasks;
 
 namespace Domain.DTO
 {
-    public class RatingUpdateDto
+    public class AddRatingDto
     {
         [Required]
-        public int RatingId { get; set; }
-        [Required]
-        public int ModifiedBy { get; set; }
+        public int CreatedBy { get; set; }
         [Required]
         [Display(Name = "Numer rozmowy")]
         public string CallId { get; set; }
@@ -34,6 +32,5 @@ namespace Domain.DTO
         [Required]
         public int Result { get; set; }
         public int CategoryId { get; set; }
-        public RatingStatus Status { get; set; }
     }
 }

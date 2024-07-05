@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.DTO
 {
-    public class RatingDto
+    public class GetRatingDto
     {
         public int RatingId { get; set; }
         public string? Safety { get; set; }

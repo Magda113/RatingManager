@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.DTO;
 using Persistence.Repository;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -44,9 +45,10 @@ namespace WebApi.Controllers
             _logger.LogInformation($"Pobrano ocenę {rating.RatingId}.");
             return Ok(rating);
         }
-        
+
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] RatingAddDto rating)
+        public async Task<IActionResult> Add([FromBody] AddRatingDto rating)
         {
             var newRating = new Rating()
             {
@@ -67,8 +69,9 @@ namespace WebApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = createdRatingId }, rating);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] RatingUpdateDto rating)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateRatingDto rating)
         {
             if (id != rating.RatingId)
             {
@@ -100,6 +103,7 @@ namespace WebApi.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -125,6 +129,20 @@ namespace WebApi.Controllers
             }
 
             _logger.LogInformation($"Otrzymano oceny z kategorią {categoryName}");
+            return Ok(ratings);
+        }
+
+        [HttpGet("ByUserName/{userName}")]
+        public async Task<IActionResult> GetRatingsByUserName(string userName)
+        {
+            var ratings = await _ratingRepository.GetRatingsByUserNameAsync(userName);
+            if (ratings == null || !ratings.Any())
+            {
+                _logger.LogInformation($"Nie ma ocen dla {userName}");
+                return NotFound();
+            }
+
+            _logger.LogInformation($"Otrzymano oceny dla {userName}");
             return Ok(ratings);
         }
     }

@@ -20,6 +20,7 @@ namespace WebApi.Controllers
             _jwtTokenService = jwtTokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {

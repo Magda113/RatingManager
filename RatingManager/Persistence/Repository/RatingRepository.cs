@@ -67,7 +67,7 @@ namespace Persistence.Repository
             }
         }
 
-        public async Task<IEnumerable<RatingDto>> GetRatingsByCategoryNameAsync(string categoryName)
+        public async Task<IEnumerable<GetRatingDto>> GetRatingsByCategoryNameAsync(string categoryName)
         {
             var sql = @"
             SELECT r.RatingId, r.Safety, r.Knowledge, r.Communication, r.Creativity, r.TechnicalAspects, r.Result
@@ -77,7 +77,22 @@ namespace Persistence.Repository
 
             using (var connection = _context.CreateConnection())
             {
-                return await connection.QueryAsync<RatingDto>(sql, new { CategoryName = categoryName });
+                return await connection.QueryAsync<GetRatingDto>(sql, new { CategoryName = categoryName });
+            }
+        }
+
+
+        public async Task<IEnumerable<GetRatingDto>> GetRatingsByUserNameAsync(string userName)
+        {
+            var sql = @"
+            SELECT r.RatingId, r.Safety, r.Knowledge, r.Communication, r.Creativity, r.TechnicalAspects, r.Result
+            FROM Ratings r
+            INNER JOIN Users u ON r.UserId = u.UserId
+            WHERE u.UserName = @UserName";
+
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QueryAsync<GetRatingDto>(sql, new { UserName = userName });
             }
         }
     }

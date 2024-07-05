@@ -8,8 +8,7 @@ namespace Domain.Models
 {
     public enum RatingStatus
     {
-        InProgress,
-        Done,
-        Deleted
+        InProgress = 0,
+        Done = 1
     }
 }

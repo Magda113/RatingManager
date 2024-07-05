@@ -11,6 +11,8 @@ namespace Persistence.Repository
 {
     public interface IRatingRepository
     {
-        Task<IEnumerable<RatingDto>> GetRatingsByCategoryNameAsync(string categoryName);
+        Task<IEnumerable<GetRatingDto>> GetRatingsByCategoryNameAsync(string categoryName);
+
+        Task<IEnumerable<GetRatingDto>> GetRatingsByUserNameAsync(string categoryName);
     }
 }

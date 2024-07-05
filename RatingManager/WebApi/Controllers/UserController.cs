@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrator")]
     public class UserController : ControllerBase
     {
         private readonly IRepository<User> _repository;
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] UserAddDto user)
+        public async Task<IActionResult> Add([FromBody] AddUserDto user)
         {
             var newUser = new User()
             {
@@ -57,7 +57,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UserUpdateDto user)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserDto user)
         {
             if (id != user.UserId)
             {

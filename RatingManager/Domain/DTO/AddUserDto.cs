@@ -8,7 +8,7 @@ using Domain.Models;
 
 namespace Domain.DTO
 {
-    public class UserAddDto
+    public class AddUserDto
     {
         [Required]
         [StringLength(100)]

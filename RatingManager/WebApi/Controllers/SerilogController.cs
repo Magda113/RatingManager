@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Persistence.Repository;
 using Domain.DTO;
 using Persistence.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,6 +11,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Administrator")]
     public class SeriLogController : ControllerBase
     {
         private SeriLogRepository _repository;
