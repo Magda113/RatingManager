@@ -1,9 +1,8 @@
-﻿using Domain.DTO;
+﻿using Application.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Persistence.Services;
-using WebApi.Auth;
+using Application.Services;
+using Application.Auth;
 
 namespace WebApi.Controllers
 {

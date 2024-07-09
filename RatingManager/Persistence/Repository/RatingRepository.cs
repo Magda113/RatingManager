@@ -1,17 +1,10 @@
 ﻿using Dapper;
-using Domain.DTO;
 using Domain.Models;
 using Persistence.Context;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence.Repository
 {
-    public class RatingRepository : IRepository<Rating>, IRatingRepository
+    public class RatingRepository : IRatingRepository
     {
         private IDapperContext _context;
         public RatingRepository(IDapperContext context)
@@ -30,11 +23,11 @@ namespace Persistence.Repository
             var sql = "";
             if (_context is DapperContext)
             {
-                sql = "INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (2, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(SCOPE_IDENTITY() as int)";
+                sql = "INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (1, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(SCOPE_IDENTITY() as int)";
             }
             else
             {
-                sql = "INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (2, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(last_insert_rowid() as int)";
+                sql = "INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (1, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(last_insert_rowid() as int)";
             }
             using (var connection = _context.CreateConnection())
             {
@@ -67,32 +60,32 @@ namespace Persistence.Repository
             }
         }
 
-        public async Task<IEnumerable<GetRatingDto>> GetRatingsByCategoryNameAsync(string categoryName)
+        public async Task<IEnumerable<Rating>> GetRatingsByCategoryNameAsync(string categoryName)
         {
             var sql = @"
-            SELECT r.RatingId, r.Safety, r.Knowledge, r.Communication, r.Creativity, r.TechnicalAspects, r.Result
+            SELECT r.*
             FROM Ratings r
             INNER JOIN Categories c ON r.CategoryId = c.CategoryId
             WHERE c.Name = @CategoryName";
 
             using (var connection = _context.CreateConnection())
             {
-                return await connection.QueryAsync<GetRatingDto>(sql, new { CategoryName = categoryName });
+                return await connection.QueryAsync<Rating>(sql, new { CategoryName = categoryName });
             }
         }
 
 
-        public async Task<IEnumerable<GetRatingDto>> GetRatingsByUserNameAsync(string userName)
+        public async Task<IEnumerable<Rating>> GetRatingsByUserNameAsync(string userName)
         {
             var sql = @"
-            SELECT r.RatingId, r.Safety, r.Knowledge, r.Communication, r.Creativity, r.TechnicalAspects, r.Result
+            SELECT r.*
             FROM Ratings r
             INNER JOIN Users u ON r.UserId = u.UserId
             WHERE u.UserName = @UserName";
 
             using (var connection = _context.CreateConnection())
             {
-                return await connection.QueryAsync<GetRatingDto>(sql, new { UserName = userName });
+                return await connection.QueryAsync<Rating>(sql, new { UserName = userName });
             }
         }
     }

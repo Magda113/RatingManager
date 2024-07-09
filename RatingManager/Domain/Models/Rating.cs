@@ -29,5 +29,30 @@ namespace Domain.Models
         public string? TechnicalAspects { get; set; }
         public int Result { get; set; }
         public int CategoryId { get; set; }
+
+        public Rating(int ratingId, RatingStatus status, int createdBy, DateTime createdAt, string callId, int userId, int result, int categoryId,
+            string? safety = null, string? knowledge = null, string? communication = null, string? creativity = null, string? technicalAspects = null,
+            int? modifiedBy = null, DateTime? modifiedAt = null)
+        {
+            RatingId = ratingId;
+            Status = status;
+            CreatedBy = createdBy;
+            CreatedAt = createdAt;
+            CallId = callId;
+            UserId = userId;
+            Result = result;
+            CategoryId = categoryId;
+            Safety = safety;
+            Knowledge = knowledge;
+            Communication = communication;
+            Creativity = creativity;
+            TechnicalAspects = technicalAspects;
+            ModifiedBy = modifiedBy;
+            ModifiedAt = modifiedAt;
+        }
+
+        public Rating()
+        {
+        }
     }
 }

@@ -1,16 +1,10 @@
 ﻿using Domain.Models;
-using Domain.DTO;
 using Persistence.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dapper;
 
 namespace Persistence.Repository
 {
-    public class SeriLogRepository : IRepository<SeriLog>, ILogs
+    public class SeriLogRepository : ISerilogRepository, ILogs
     {
         private IDapperContext _context;
         public SeriLogRepository(IDapperContext context)
@@ -30,7 +24,7 @@ namespace Persistence.Repository
         public Task<int> AddAsync(SeriLog entity) => throw new System.NotImplementedException();
         public Task<bool> DeleteAsync(int id) => throw new System.NotImplementedException();
         public Task<bool> UpdateAsync(SeriLog entity) => throw new System.NotImplementedException();
-        public async Task<IEnumerable<LogCountByDayDto>> GetLogCountByDay()
+        public async Task<IEnumerable<LogCountByDay>> GetLogCountByDay()
         {
             var sql = @"
     SELECT 
@@ -39,7 +33,7 @@ namespace Persistence.Repository
     FROM SeriLogs
     GROUP BY CAST(TimeStamp AS DATE)
     ORDER BY Day";
-            var results = await _context.CreateConnection().QueryAsync<LogCountByDayDto>(sql);
+            var results = await _context.CreateConnection().QueryAsync<LogCountByDay>(sql);
             return results;
         }
     }

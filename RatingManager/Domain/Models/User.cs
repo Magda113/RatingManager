@@ -26,7 +26,7 @@ namespace Domain.Models
         [Required]
         [StringLength(100)]
         public string Department { get; set; }
-
+        public int CreatedBy { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
 

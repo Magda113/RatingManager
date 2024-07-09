@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getRatingById, addRating, updateRating } from '../services/ratingService';
 
 const RatingForm = () => {
     const { id } = useParams();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [rating, setRating] = useState({
         callId: '',
-        userId: '',
+        userName: '',
         safety: '',
         knowledge: '',
         communication: '',
         creativity: '',
         technicalAspects: '',
-        result: '',
-        categoryId: ''
+        result: 0,
+        categoryName: '',
+        status: '' // Initialize status for update scenarios
     });
 
     useEffect(() => {
         if (id) {
             const fetchRating = async () => {
-                const data = await getRatingById(id);
-                setRating(data);
+                try {
+                    const data = await getRatingById(id);
+                    setRating(data);
+                } catch (error) {
+                    console.error(error);
+                }
             };
-
             fetchRating();
         }
     }, [id]);
@@ -35,54 +39,64 @@ const RatingForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (id) {
-            await updateRating(id, rating);
-        } else {
-            await addRating(rating);
+        try {
+            if (id) {
+                await updateRating(id, rating);
+            } else {
+                await addRating(rating);
+            }
+            navigate('/ratings');
+        } catch (error) {
+            console.error(error);
         }
-        history.push('/ratings');
     };
 
     return (
         <div>
-            <h2>{id ? 'Edytuj Ocenę' : 'Dodaj Ocenę'}</h2>
+            <h2>{id ? 'Edytuj' : 'Dodaj'}</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Numer rozmowy</label>
+                    <label>Numer rozmowy: </label>
                     <input name="callId" value={rating.callId} onChange={handleChange} required />
                 </div>
                 <div>
-                    <label>Użytkownik</label>
-                    <input name="userId" value={rating.userId} onChange={handleChange} required />
+                    <label>Użytkownik: </label>
+                    <input name="userName" value={rating.userName} onChange={handleChange} required />
                 </div>
                 <div>
-                    <label>Bezpieczeństwo</label>
-                    <textarea name="safety" value={rating.safety} onChange={handleChange}></textarea>
+                    <label>Bezpieczeństwo: </label>
+                    <input name="safety" value={rating.safety} onChange={handleChange} />
                 </div>
                 <div>
-                    <label>Wiedza</label>
-                    <textarea name="knowledge" value={rating.knowledge} onChange={handleChange}></textarea>
+                    <label>Wiedza: </label>
+                    <input name="knowledge" value={rating.knowledge} onChange={handleChange} />
                 </div>
                 <div>
-                    <label>Komunikacja</label>
-                    <textarea name="communication" value={rating.communication} onChange={handleChange}></textarea>
+                    <label>Komunikacja: </label>
+                    <input name="communication" value={rating.communication} onChange={handleChange} />
                 </div>
                 <div>
-                    <label>Kreatywność</label>
-                    <textarea name="creativity" value={rating.creativity} onChange={handleChange}></textarea>
+                    <label>Kreatywność: </label>
+                    <input name="creativity" value={rating.creativity} onChange={handleChange} />
                 </div>
                 <div>
-                    <label>Aspekty techniczne</label>
-                    <textarea name="technicalAspects" value={rating.technicalAspects} onChange={handleChange}></textarea>
+                    <label>Aspekty techniczne: </label>
+                    <input name="technicalAspects" value={rating.technicalAspects} onChange={handleChange} />
                 </div>
                 <div>
-                    <label>Wynik</label>
-                    <input name="result" value={rating.result} onChange={handleChange} required />
+                    <label>Wynik: </label>
+                    <input type="number" name="result" value={rating.result} onChange={handleChange} required />
                 </div>
                 <div>
-                    <label>Kategoria</label>
-                    <input name="categoryId" value={rating.categoryId} onChange={handleChange} required />
+                    <label>Kategoria: </label>
+                    <input name="categoryName" value={rating.categoryName} onChange={handleChange} required />
                 </div>
+                {id && (
+                    <div>
+                        <label>Status oceny: </label>
+                        <input name="status" value={rating.status} onChange={handleChange} required />
+                    </div>
+                )}
                 <button type="submit">{id ? 'Zapisz' : 'Dodaj'}</button>
             </form>
         </div>
@@ -90,3 +104,4 @@ const RatingForm = () => {
 };
 
 export default RatingForm;
+

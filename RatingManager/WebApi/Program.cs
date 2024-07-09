@@ -3,9 +3,9 @@ using Domain.Models;
 using Microsoft.OpenApi.Models;
 using Persistence.Context;
 using Persistence.Repository;
-using Persistence.Services;
+using Application.Services;
 using Serilog;
-using WebApi.Auth;
+using Application.Auth;
 
 namespace WebApi
 {
@@ -18,7 +18,7 @@ namespace WebApi
                 loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration));
 
             // Add services to the container.
-
+            
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -63,16 +63,26 @@ namespace WebApi
                         ValidAudience = builder.Configuration["Jwt:Audience"]
                     };
                 });
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddAuthorization();
-            builder.Services.AddSingleton<IUserRepository, UserRepository>();
-            builder.Services.AddSingleton<IUserService, UserService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddSingleton<JwtTokenService>();
             builder.Services.AddSingleton<IDapperContext, DapperContext>();
-            builder.Services.AddScoped<IRepository<User>, UserRepository>();
-            builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
-            builder.Services.AddScoped<IRepository<Rating>, RatingRepository>();
             builder.Services.AddScoped<SeriLogRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+            builder.Services.AddScoped<IRatingService, RatingService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                    builder.WithOrigins("http://localhost:5204")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
 
             var app = builder.Build();
 
@@ -98,6 +108,7 @@ namespace WebApi
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 

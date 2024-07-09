@@ -1,34 +1,37 @@
 ﻿using Persistence.Context;
 using Domain.Models;
-using Domain.DTO;
 using Dapper;
 
 namespace Persistence.Repository
 {
-    public class UserRepository : IRepository<User>, IUserRepository
+    public class UserRepository : IUserRepository
     {
         private IDapperContext _context;
+
         public UserRepository(IDapperContext context)
         {
             _context = context;
         }
+
         public async Task<IEnumerable<User>> GetAllAsync()
         {
             using (var connection = _context.CreateConnection())
             {
-                return await connection.QueryAsync<User>("SELECT * FROM Users");
+                var users = await connection.QueryAsync<User>("SELECT UserId, UserName, Email, Role, Department, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt FROM Users");
+                return users;
             }
         }
+
         public async Task<int> AddAsync(User entity)
         {
             var sql = "";
             if (_context is DapperContext)
             {
-                sql = "INSERT INTO Users (UserName, Email, Role, Department, CreatedAt, PasswordHash) VALUES (@UserName, @Email, @Role, @Department, getdate(), @PasswordHash); SELECT CAST(SCOPE_IDENTITY() as int)";
+                sql = "INSERT INTO Users (UserName, Email, Role, Department, CreatedBy, CreatedAt, PasswordHash) VALUES (@UserName, @Email, @Role, @Department, @CreatedBy, getdate(), @PasswordHash); SELECT CAST(SCOPE_IDENTITY() as int)";
             }
             else
             {
-                sql = "INSERT INTO Users (UserName, Email, Role, Department, CreatedAt, PasswordHash) VALUES (@UserName, @Email, @Role, @Department, getdate(), @PasswordHash); SELECT CAST(last_insert_rowid() as int)";
+                sql = "INSERT INTO Users (UserName, Email, Role, Department, CreatedBy, CreatedAt, PasswordHash) VALUES (@UserName, @Email, @Role, @Department, @CreatedBy, getdate(), @PasswordHash); SELECT CAST(last_insert_rowid() as int)";
             }
             using (var connection = _context.CreateConnection())
             {
@@ -36,22 +39,26 @@ namespace Persistence.Repository
                 return id;
             }
         }
+
         public async Task<User> GetByIdAsync(int userId)
         {
             using (var connection = _context.CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE UserId = @UserId", new { UserId = userId });
+                var user = await connection.QuerySingleOrDefaultAsync<User>("SELECT UserId, UserName, Email, Role, Department, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt FROM Users WHERE UserId = @UserId", new { UserId = userId });
+                return user;
             }
         }
+
         public async Task<bool> UpdateAsync(User entity)
         {
-            var sql = "UPDATE Users SET UserName = @UserName, Email = @Email, Role = @Role, Department = @Department, PasswordHash = @PasswordHash, ModifiedBy = @ModifiedBy, ModifiedAt = getdate() WHERE UserId = @UserId";
+            var sql = "UPDATE Users SET UserName = @UserName, Email = @Email, Role = @Role, Department = @Department, ModifiedBy = @ModifiedBy, ModifiedAt = getdate() WHERE UserId = @UserId";
             using (var connection = _context.CreateConnection())
             {
                 var affectedRows = await connection.ExecuteAsync(sql, entity);
                 return affectedRows > 0;
             }
         }
+
         public async Task<bool> DeleteAsync(int userId)
         {
             using (var connection = _context.CreateConnection())
@@ -70,5 +77,17 @@ namespace Persistence.Repository
                 return user;
             }
         }
+
+        public async Task<User> GetByUserNameAsync(string userName)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QuerySingleOrDefaultAsync<User>(
+                    "SELECT * FROM Users WHERE UserName = @UserName",
+                    new { UserName = userName });
+            }
+        }
+
     }
+
 }

@@ -1,7 +1,4 @@
-﻿using Domain.Models;
-using Microsoft.AspNetCore.Mvc;
-using Persistence.Repository;
-using Domain.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
 using Persistence.Repository;
 using Microsoft.AspNetCore.Authorization;
 

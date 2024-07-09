@@ -1,15 +1,10 @@
 ﻿using Dapper;
 using Domain.Models;
 using Persistence.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Persistence.Repository
 {
-    public class CategoryRepository : IRepository<Category>
+    public class CategoryRepository : ICategoryRepository
     {
         private IDapperContext _context;
         public CategoryRepository(IDapperContext context)
@@ -63,6 +58,16 @@ namespace Persistence.Repository
             {
                 var affectedRows = await connection.ExecuteAsync("DELETE FROM Categories WHERE CategoryId = @CategoryId", new { CategoryId = categoryId });
                 return affectedRows > 0;
+            }
+        }
+
+        public async Task<Category> GetByNameAsync(string categoryName)
+        {
+            using (var connection = _context.CreateConnection())
+            {
+                return await connection.QuerySingleOrDefaultAsync<Category>(
+                    "SELECT * FROM Categories WHERE Name = @Name",
+                    new { Name = categoryName });
             }
         }
     }
