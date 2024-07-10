@@ -67,7 +67,7 @@ namespace Persistence.Repository
             {
                 return await connection.QuerySingleOrDefaultAsync<Category>(
                     "SELECT * FROM Categories WHERE Name = @Name",
-                    new { Name = categoryName });
+                    new { Name = categoryName.ToLower() });
             }
         }
     }

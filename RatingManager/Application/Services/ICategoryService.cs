@@ -10,9 +10,9 @@ namespace Application.Services
 {
     public interface ICategoryService
     {
-        Task<Category> AddCategoryAsync(AddCategoryDto categoryDto);
-        Task<IEnumerable<Category>> GetAllAsync();
-        Task<Category> GetCategoryByIdAsync(int categoryId);
+        Task<GetCategoryDto> AddCategoryAsync(AddCategoryDto categoryDto);
+        Task<IEnumerable<GetCategoryDto>> GetAllAsync();
+        Task<GetCategoryDto> GetCategoryByIdAsync(int categoryId);
         Task<bool> UpdateCategoryAsync(int categoryId, UpdateCategoryDto updateDto);
         Task<bool> DeleteCategoryAsync(int categoryId);
         

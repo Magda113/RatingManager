@@ -10,12 +10,13 @@ namespace Application.DTO
 {
     public class UpdateCategoryDto
     {
+        [Display(Name = "Id")]
         public int CategoryId { get; set; }
-
+        [Display(Name = "Nazwa")]
         [Required]
         public string Name { get; set; }
 
         [Required]
-        public CategoryStatus Status { get; set; }
+        public string Status { get; set; }
     }
 }

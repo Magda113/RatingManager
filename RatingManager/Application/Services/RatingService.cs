@@ -32,13 +32,13 @@ namespace Application.Services
         {
             int createdByUserId = _jwtTokenService.GetUserIdFromToken(_httpContextAccessor.HttpContext);
 
-            var user = await _userRepository.GetByUserNameAsync(ratingDto.UserName);
+            var user = await _userRepository.GetByUserNameAsync(ratingDto.UserName.ToLower());
             if (user == null)
             {
                 throw new Exception("Użytkownik nie istnieje");
             }
 
-            var category = await _categoryRepository.GetByNameAsync(ratingDto.CategoryName);
+            var category = await _categoryRepository.GetByNameAsync(ratingDto.CategoryName.ToLower());
             if (category == null)
             {
                 throw new Exception("Kategoria nie istnieje");
@@ -68,13 +68,13 @@ namespace Application.Services
         {
             int modifiedByUserId = _jwtTokenService.GetUserIdFromToken(_httpContextAccessor.HttpContext);
 
-            var user = await _userRepository.GetByUserNameAsync(updateDto.UserName);
+            var user = await _userRepository.GetByUserNameAsync(updateDto.UserName.ToLower());
             if (user == null)
             {
                 throw new Exception("Użytkownik nie istnieje");
             }
 
-            var category = await _categoryRepository.GetByNameAsync(updateDto.CategoryName);
+            var category = await _categoryRepository.GetByNameAsync(updateDto.CategoryName.ToLower());
             if (category == null)
             {
                 throw new Exception("Kategoria nie istnieje");
@@ -86,7 +86,7 @@ namespace Application.Services
                 return false;
             }
 
-            if (!Enum.TryParse<RatingStatus>(updateDto.Status, out var parsedStatus))
+            if (!Enum.TryParse<RatingStatus>(updateDto.Status, true, out var parsedStatus))
             {
                 throw new ArgumentException("Invalid status value");
             }

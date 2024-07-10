@@ -78,7 +78,7 @@ namespace WebApi
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
-                    builder.WithOrigins("http://localhost:5204")
+                    builder.WithOrigins("http://localhost:5206")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());

@@ -8,7 +8,7 @@ namespace Domain.Models
 {
     public enum CategoryStatus
     {
-        InActive =0,
-        Active =1,
+        Nieaktywna=0,
+        Aktywna =1,
     }
 }

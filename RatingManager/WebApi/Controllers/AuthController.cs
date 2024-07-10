@@ -35,20 +35,20 @@ namespace WebApi.Controllers
             });
         }
 
-        [HttpGet("test/public")]
-        [AllowAnonymous]
-        public IActionResult TestPublic() => Ok();
+        //[HttpGet("test/public")]
+        //[AllowAnonymous]
+        //public IActionResult TestPublic() => Ok();
 
-        [HttpGet("test/private")]
-        [Authorize]
-        public IActionResult TestPrivate() => Ok();
+        //[HttpGet("test/private")]
+        //[Authorize]
+        //public IActionResult TestPrivate() => Ok();
 
-        [HttpGet("test/admin")]
-        [Authorize(Roles = "Administrator")]
-        public IActionResult TestAdmin() => Ok();
+        //[HttpGet("test/admin")]
+        //[Authorize(Roles = "Administrator")]
+        //public IActionResult TestAdmin() => Ok();
 
-        [HttpGet("test/user")]
-        [Authorize(Roles = "User")]
-        public IActionResult TestUser() => Ok();
+        //[HttpGet("test/user")]
+        //[Authorize(Roles = "User")]
+        //public IActionResult TestUser() => Ok();
     }
 }

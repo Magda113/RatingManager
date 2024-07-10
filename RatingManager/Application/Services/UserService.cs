@@ -33,11 +33,18 @@ namespace Application.Services
         public async Task<User> AddUserAsync(AddUserDto user)
         {
             int userId = _jwtTokenService.GetUserIdFromToken(_httpContextAccessor.HttpContext);
+
+            // Map role name to UserRole enum
+            if (!Enum.TryParse<UserRole>(user.Role, out var userRole))
+            {
+                throw new ArgumentException($"Nie ma takiej roli: {user.Role}");
+            }
+
             var newUser = new User()
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Role = user.Role,
+                Role = userRole,
                 Department = user.Department,
                 PasswordHash = user.PasswordHash,
                 CreatedBy = userId,
@@ -51,13 +58,25 @@ namespace Application.Services
         public async Task<IEnumerable<GetUserDto>> GetAllAsync()
         {
             var users = await _userRepository.GetAllAsync();
-            return users.Select(user => MapUserToDto(user));
+            var usersDto = new List<GetUserDto>();
+
+            foreach (var user in users)
+            {
+                usersDto.Add(await MapUserToDto(user));
+            }
+
+            return usersDto;
         }
 
         public async Task<GetUserDto> GetUserByIdAsync(int userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
-            return MapUserToDto(user);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return await MapUserToDto(user);
         }
 
         public async Task<bool> UpdateUserAsync(int id, UpdateUserDto updateDto)
@@ -69,12 +88,19 @@ namespace Application.Services
                 return false;
             }
 
+            // Update user fields
             user.UserName = updateDto.UserName;
             user.Email = updateDto.Email;
-            user.Role = updateDto.Role;
             user.Department = updateDto.Department;
             user.ModifiedBy = userId;
             user.ModifiedAt = DateTime.Now;
+
+            // Map role name to UserRole enum
+            if (!Enum.TryParse<UserRole>(updateDto.Role, out var userRole))
+            {
+                throw new ArgumentException($"Nie ma takiej roli: {updateDto.Role}");
+            }
+            user.Role = userRole;
 
             return await _userRepository.UpdateAsync(user);
         }
@@ -84,22 +110,37 @@ namespace Application.Services
             return await _userRepository.DeleteAsync(userId);
         }
 
-        private GetUserDto MapUserToDto(User user)
+        private async Task<GetUserDto> MapUserToDto(User user)
         {
+            string createdByFullName = await GetFullNameById(user.CreatedBy);
+
+            string modifiedByFullName = user.ModifiedBy.HasValue ? await GetFullNameById(user.ModifiedBy.Value) : null;
+
             return new GetUserDto
             {
                 UserId = user.UserId,
                 UserName = user.UserName,
                 Email = user.Email,
-                Role = user.Role,
+                Role = user.Role.ToString(),
                 Department = user.Department,
-                CreatedBy = user.CreatedBy,
+                CreatedByFullName = createdByFullName,
                 CreatedAt = user.CreatedAt,
-                ModifiedBy = user.ModifiedBy,
+                ModifiedByFullName = modifiedByFullName,
                 ModifiedAt = user.ModifiedAt
             };
         }
+
+        private async Task<string> GetFullNameById(int userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                return user.UserName; 
+            }
+            else
+            {
+                return "Nieznany użytkownik";
+            }
+        }
     }
-
-
 }

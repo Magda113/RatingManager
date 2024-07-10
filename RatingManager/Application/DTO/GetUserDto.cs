@@ -10,27 +10,32 @@ namespace Application.DTO
 {
     public class GetUserDto
     {
+        [Display(Name = "Id")]
         public int UserId { get; set; }
-
+        [Display(Name = "Imię i nazwisko")]
         [Required]
         [StringLength(100)]
         public string UserName { get; set; }
-
+        [Display(Name = "Adres mailowy")]
         [Required]
         [EmailAddress]
         [StringLength(100)]
         public string Email { get; set; }
-
+        [Display(Name = "Rola")]
         [Required]
-        public UserRole Role { get; set; }
-
+        public string Role { get; set; }
+        [Display(Name = "Departament")]
         [Required]
         [StringLength(100)]
         public string Department { get; set; }
-        public int CreatedBy { get; set; }
-        [Required]
+        [Display(Name = "Dodany przez")]
+        public string CreatedByFullName { get; set; }
+        [Display(Name = "Data dodania")]
         public DateTime CreatedAt { get; set; }
-        public int? ModifiedBy { get; set; }
+        [Display(Name = "Zaktualizowany przez")]
+        public string ModifiedByFullName { get; set; }
+        [Display(Name = "Data aktualizacji")]
         public DateTime? ModifiedAt { get; set; }
     }
+
 }

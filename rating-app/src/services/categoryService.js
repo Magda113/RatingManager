@@ -90,10 +90,7 @@ export const updateCategory = async (id, category) => {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
             method: 'PUT',
-            headers: {
-                ...headers,
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(category)
         });
 

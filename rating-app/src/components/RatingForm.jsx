@@ -15,7 +15,7 @@ const RatingForm = () => {
         technicalAspects: '',
         result: 0,
         categoryName: '',
-        status: '' // Initialize status for update scenarios
+        status: ''
     });
 
     useEffect(() => {

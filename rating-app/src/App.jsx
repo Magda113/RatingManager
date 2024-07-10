@@ -1,6 +1,3 @@
-// App.js
-// App.js
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import RatingList from './components/RatingList';
@@ -13,11 +10,12 @@ import UserList from './components/UserList';
 import UserDetail from './components/UserDetail';
 import UserForm from './components/UserForm';
 import Login from './components/Login';
+import './App.css';
 
 import { getToken, logout } from './services/authService';
 
 const PrivateComponent = () => {
-    return <div>Private Component</div>;
+    return <div className="content">Private Component</div>;
 };
 
 const Logout = ({ onLogout }) => {
@@ -30,7 +28,7 @@ const Logout = ({ onLogout }) => {
     };
 
     return (
-        <div>
+        <div className>
             <h2>Logging out...</h2>
             {handleLogout()}
         </div>
@@ -38,7 +36,7 @@ const Logout = ({ onLogout }) => {
 };
 
 const Home = () => {
-    return <div>Strona główna</div>;
+    return <div >Strona główna</div>;
 };
 
 const App = () => {
@@ -88,32 +86,32 @@ const App = () => {
                     </ul>
                 </nav>
 
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/ratings" element={<RatingList />} />
-                    <Route path="/ratings/new" element={<RatingForm />} />
-                    <Route path="/ratings/:id" element={<RatingDetail />} />
-                    <Route path="/ratings/edit/:id" element={<RatingForm />} />
-                    <Route path="/categories" element={<CategoryList />} />
-                    <Route path="/categories/new" element={<CategoryForm />} />
-                    <Route path="/categories/edit/:id" element={<CategoryForm />} />
-                    <Route path="/categories/:id" element={<CategoryDetail />} />
-                    <Route path="/users" element={<UserList />} />
-                    <Route path="/users/new" element={<UserForm />} />
-                    <Route path="/users/edit/:id" element={<UserForm />} />
-                    <Route path="/users/:id" element={<UserDetail />} />
-                    <Route path="/login" element={<Login onLogin={handleLogin} />} />
-                    {isLoggedIn ? (
-                        <Route path="/private" element={<PrivateComponent />} />
-                    ) : (
-                        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-                    )}
-                    <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
-                    <Route path="/login" element={<Navigate to="/login" replace />} />
-                </Routes>
-            </div>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/ratings" element={<RatingList/>}/>
+                        <Route path="/ratings/new" element={<RatingForm/>}/>
+                        <Route path="/ratings/:id" element={<RatingDetail/>}/>
+                        <Route path="/ratings/edit/:id" element={<RatingForm/>}/>
+                        <Route path="/categories" element={<CategoryList/>}/>
+                        <Route path="/categories/new" element={<CategoryForm/>}/>
+                        <Route path="/categories/edit/:id" element={<CategoryForm/>}/>
+                        <Route path="/categories/:id" element={<CategoryDetail/>}/>
+                        <Route path="/users" element={<UserList/>}/>
+                        <Route path="/users/new" element={<UserForm/>}/>
+                        <Route path="/users/edit/:id" element={<UserForm/>}/>
+                        <Route path="/users/:id" element={<UserDetail/>}/>
+                        <Route path="/login" element={<Login onLogin={handleLogin}/>}/>
+                        {isLoggedIn ? (
+                            <Route path="/private" element={<PrivateComponent/>}/>
+                        ) : (
+                            <Route path="/login" element={<Login onLogin={handleLogin}/>}/>
+                        )}
+                        <Route path="/logout" element={<Logout onLogout={handleLogout}/>}/>
+                        <Route path="/login" element={<Navigate to="/login" replace/>}/>
+                    </Routes>
+                </div>
         </Router>
-    );
+);
 };
 
 export default App;

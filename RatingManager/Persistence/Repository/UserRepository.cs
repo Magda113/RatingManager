@@ -84,7 +84,7 @@ namespace Persistence.Repository
             {
                 return await connection.QuerySingleOrDefaultAsync<User>(
                     "SELECT * FROM Users WHERE UserName = @UserName",
-                    new { UserName = userName });
+                    new { UserName = userName.ToLower() });
             }
         }
 

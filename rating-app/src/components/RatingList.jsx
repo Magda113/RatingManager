@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllRatings, deleteRating, searchRatingsByCategory, searchRatingsByUser } from '../services/ratingService';
+import { getAllRatings, getRatingById, deleteRating, searchRatingsByCategory, searchRatingsByUser } from '../services/ratingService';
 
 const RatingList = () => {
     const [ratings, setRatings] = useState([]);
     const [error, setError] = useState(null);
     const [categoryName, setCategoryName] = useState('');
     const [userId, setUserId] = useState('');
+    const [searchId, setSearchId] = useState('');
 
     useEffect(() => {
         fetchRatings();
@@ -21,7 +22,6 @@ const RatingList = () => {
             setError('Coś poszło nie tak');
         }
     };
-
     const handleDelete = async (id) => {
         try {
             await deleteRating(id);
@@ -29,6 +29,15 @@ const RatingList = () => {
         } catch (error) {
             console.error(error);
             setError('Coś poszło nie tak');
+        }
+    };
+    const handleIdSearch = async () => {
+        try {
+            const data = await getRatingById(searchId);
+            setRatings([data]);
+        } catch (error) {
+            console.error(error);
+            setError('Błąd podczas wyszukiwania ocen');
         }
     };
     const handleCategorySearch = async () => {
@@ -66,7 +75,12 @@ const RatingList = () => {
                        placeholder="Wyszukaj po użytkowniku"/>
                 <button onClick={handleUserSearch}>Szukaj po użytkowniku</button>
             </div>
-
+            <div>
+                <input type="text" value={searchId}
+                       onChange={(e) => setSearchId(e.target.value)} // Updated to use searchId state
+                       placeholder="Wyszukaj po id"/>
+                <button onClick={handleIdSearch}>Szukaj po id</button>
+            </div>
 
             <ul>
                 {ratings.map(rating => (

@@ -15,12 +15,10 @@ const CategoryForm = () => {
             const fetchCategory = async () => {
                 try {
                     const data = await getCategoryById(id);
-                    setCategory({
-                        name: data.name,
-                        status: parseInt(data.status)
-                    });
+                    setCategory(data);
                 } catch (error) {
                     console.error('Error fetching category:', error);
+                    setError('Błąd podczas pobierania danych kategorii');
                 }
             };
 
@@ -37,15 +35,15 @@ const CategoryForm = () => {
         e.preventDefault();
         try {
             if (id) {
-                const updatedCategory = { ...category, status: parseInt(category.status) };
-                await updateCategory(id, updatedCategory);
+                await updateCategory(id, category);
                 console.log('Udało się zmienić kategorię');
             } else {
                 await addCategory(category);
+                console.log('Udało się dodać kategorię');
             }
             navigate('/categories');
         } catch (error) {
-            console.error('Error submitting category:', error);
+            console.error(error);
         }
     };
 
@@ -57,10 +55,12 @@ const CategoryForm = () => {
                     <label>Nazwa:</label>
                     <input type="text" name="name" value={category.name} onChange={handleChange} required />
                 </div>
-                <div>
-                    <label>Status:</label>
-                    <input name="status" value={category.status} onChange={handleChange} type="number"  required />
-                </div>
+                {id && (
+                    <div>
+                        <label>Status: </label>
+                        <input name="status" value={category.status} onChange={handleChange} required />
+                    </div>
+                )}
                 <button type="submit">{id ? 'Zapisz zmiany' : 'Dodaj'}</button>
             </form>
         </div>

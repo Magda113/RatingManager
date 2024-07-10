@@ -10,7 +10,7 @@ const UserForm = () => {
         email: '',
         role: '',
         department: '',
-        passwordHash: '' // Dodaj pole passwordHash do stanu
+        passwordHash: ''
     });
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const UserForm = () => {
             const fetchUser = async () => {
                 try {
                     const data = await getUserById(id);
-                    setUser(data);  // Ustaw dane pobrane z backendu do 'user'
+                    setUser(data); // Ustaw dane pobrane z backendu do 'user'
                 } catch (error) {
                     console.error('Błąd pobierania użytkownika:', error);
                 }
@@ -37,19 +37,9 @@ const UserForm = () => {
         try {
             if (id) {
                 const { passwordHash, ...userWithoutPassword } = user; // Usuń passwordHash podczas edycji
-                await updateUser(id, {
-                    ...userWithoutPassword,
-                    role: parseInt(user.role)  // Konwertuj role na liczbę
-                });
+                await updateUser(id, userWithoutPassword);
             } else {
-                const userDto = {
-                    userName: user.userName,
-                    email: user.email,
-                    role: parseInt(user.role),  // Konwertuj role na liczbę
-                    department: user.department,
-                    passwordHash: user.passwordHash // Dodaj passwordHash do obiektu
-                };
-                await addUser(userDto);
+                await addUser(user);
             }
             navigate('/users');
         } catch (error) {
@@ -80,7 +70,7 @@ const UserForm = () => {
                 {!id && (
                     <div>
                         <label>Hasło</label>
-                        <input name="passwordHash" type="password" value={user.passwordHash} onChange={handleChange} required /> {/* Dodaj pole do hasła tylko przy dodawaniu */}
+                        <input name="passwordHash" type="password" value={user.passwordHash} onChange={handleChange} required />
                     </div>
                 )}
                 <button type="submit">{id ? 'Zapisz zmiany' : 'Dodaj Użytkownika'}</button>
@@ -90,4 +80,5 @@ const UserForm = () => {
 };
 
 export default UserForm;
+
 
