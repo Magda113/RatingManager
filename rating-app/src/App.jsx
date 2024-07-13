@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import RatingList from './components/RatingList';
-//import RatingDetail from './components/RatingDetail';
 import RatingForm from './components/RatingForm';
 import CategoryList from './components/CategoryList';
-//import CategoryDetail from './components/CategoryDetail';
 import CategoryForm from './components/CategoryForm';
 import UserList from './components/UserList';
-//import UserDetail from './components/UserDetail';
 import UserForm from './components/UserForm';
 import Login from './components/Login';
 import './App.css';
@@ -18,6 +15,7 @@ const PrivateComponent = () => {
     return <div className="content">Private Component</div>;
 };
 
+// eslint-disable-next-line react/prop-types
 const Logout = ({ onLogout }) => {
     const navigate = useNavigate();
 
