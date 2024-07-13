@@ -18,9 +18,9 @@ const UserForm = () => {
             const fetchUser = async () => {
                 try {
                     const data = await getUserById(id);
-                    setUser(data); // Ustaw dane pobrane z backendu do 'user'
+                    setUser(data);
                 } catch (error) {
-                    console.error('Błąd pobierania użytkownika:', error);
+                    console.error(error);
                 }
             };
             fetchUser();

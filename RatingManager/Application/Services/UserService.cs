@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -34,23 +35,21 @@ namespace Application.Services
         {
             int userId = _jwtTokenService.GetUserIdFromToken(_httpContextAccessor.HttpContext);
 
-            // Map role name to UserRole enum
-            if (!Enum.TryParse<UserRole>(user.Role, out var userRole))
+            if (!Enum.TryParse<UserRole>(user.Role, true, out var userRole))
             {
                 throw new ArgumentException($"Nie ma takiej roli: {user.Role}");
             }
-
+            var passwordHash = HashPassword(user.PasswordHash);
             var newUser = new User()
             {
                 UserName = user.UserName,
                 Email = user.Email,
                 Role = userRole,
                 Department = user.Department,
-                PasswordHash = user.PasswordHash,
+                PasswordHash = passwordHash,
                 CreatedBy = userId,
                 CreatedAt = DateTime.Now
             };
-
             newUser.UserId = await _userRepository.AddAsync(newUser);
             return newUser;
         }
@@ -59,12 +58,23 @@ namespace Application.Services
         {
             var users = await _userRepository.GetAllAsync();
             var usersDto = new List<GetUserDto>();
-
             foreach (var user in users)
             {
-                usersDto.Add(await MapUserToDto(user));
+                string createdByFullName = await GetFullNameById(user.CreatedBy);
+                string modifiedByFullName = user.ModifiedBy.HasValue ? await GetFullNameById(user.ModifiedBy.Value) : null;
+                usersDto.Add(new GetUserDto
+                {
+                    UserId = user.UserId,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Role = user.Role.ToString(),
+                    Department = user.Department,
+                    CreatedByFullName = createdByFullName,
+                    CreatedAt = user.CreatedAt,
+                    ModifiedByFullName = modifiedByFullName,
+                    ModifiedAt = user.ModifiedAt
+                });
             }
-
             return usersDto;
         }
 
@@ -76,44 +86,7 @@ namespace Application.Services
                 return null;
             }
 
-            return await MapUserToDto(user);
-        }
-
-        public async Task<bool> UpdateUserAsync(int id, UpdateUserDto updateDto)
-        {
-            int userId = _jwtTokenService.GetUserIdFromToken(_httpContextAccessor.HttpContext);
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
-            {
-                return false;
-            }
-
-            // Update user fields
-            user.UserName = updateDto.UserName;
-            user.Email = updateDto.Email;
-            user.Department = updateDto.Department;
-            user.ModifiedBy = userId;
-            user.ModifiedAt = DateTime.Now;
-
-            // Map role name to UserRole enum
-            if (!Enum.TryParse<UserRole>(updateDto.Role, out var userRole))
-            {
-                throw new ArgumentException($"Nie ma takiej roli: {updateDto.Role}");
-            }
-            user.Role = userRole;
-
-            return await _userRepository.UpdateAsync(user);
-        }
-
-        public async Task<bool> DeleteUserAsync(int userId)
-        {
-            return await _userRepository.DeleteAsync(userId);
-        }
-
-        private async Task<GetUserDto> MapUserToDto(User user)
-        {
             string createdByFullName = await GetFullNameById(user.CreatedBy);
-
             string modifiedByFullName = user.ModifiedBy.HasValue ? await GetFullNameById(user.ModifiedBy.Value) : null;
 
             return new GetUserDto
@@ -130,6 +103,35 @@ namespace Application.Services
             };
         }
 
+        public async Task<bool> UpdateUserAsync(int id, UpdateUserDto updateDto)
+        {
+            int userId = _jwtTokenService.GetUserIdFromToken(_httpContextAccessor.HttpContext);
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.UserName = updateDto.UserName;
+            user.Email = updateDto.Email;
+            user.Department = updateDto.Department;
+            user.ModifiedBy = userId;
+            user.ModifiedAt = DateTime.Now;
+
+            if (!Enum.TryParse<UserRole>(updateDto.Role, out var userRole))
+            {
+                throw new ArgumentException($"Nie ma takiej roli: {updateDto.Role}");
+            }
+            user.Role = userRole;
+
+            return await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            return await _userRepository.DeleteAsync(userId);
+        }
+        
         private async Task<string> GetFullNameById(int userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
@@ -140,6 +142,20 @@ namespace Application.Services
             else
             {
                 return "Nieznany użytkownik";
+            }
+        }
+
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var builder = new StringBuilder();
+                foreach (var b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }

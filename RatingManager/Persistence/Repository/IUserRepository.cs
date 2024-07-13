@@ -8,11 +8,10 @@ namespace Persistence.Repository
     {
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> GetByIdAsync(int id);
-        Task<int> AddAsync(User entity);
-        Task<bool> UpdateAsync(User entity);
+        Task<int> AddAsync(User user);
+        Task<bool> UpdateAsync(User user);
         Task<bool> DeleteAsync(int id);
         Task<User?> Authenticate(string userName, string password);
-
         Task<User> GetByUserNameAsync(string userName);
     }
 }

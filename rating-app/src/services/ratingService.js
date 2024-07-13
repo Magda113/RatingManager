@@ -73,7 +73,7 @@ export const updateRating = async (id, rating) => {
             throw new Error(`Failed to update rating: ${errorText}`);
         }
 
-        return true; // Zwrócenie flagi sukcesu
+        return true;
     } catch (error) {
         console.error(`Update rating error for ${id}:`, error);
         throw new Error('Failed to update rating');

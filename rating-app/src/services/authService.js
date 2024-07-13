@@ -1,4 +1,3 @@
-// src/services/authService.js
 const API_URL = 'https://localhost:7014/api';
 
 export const login = async (username, password) => {
@@ -20,8 +19,6 @@ export const login = async (username, password) => {
         const data = await response.json();
         const token = data.token;
         console.log('Received token:', token);
-
-        // Zapisz token w localStorage
         localStorage.setItem('token', token);
         console.log('Token saved in localStorage:', token);
 

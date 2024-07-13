@@ -13,7 +13,6 @@ namespace WebApi.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly ILogger<CategoryController> _logger;
-
         public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
@@ -49,7 +48,6 @@ namespace WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             var newCategory = await _categoryService.AddCategoryAsync(categoryDto);
             _logger.LogInformation($"Kategoria {newCategory.Name} została dodana do bazy danych.");
             return CreatedAtAction(nameof(GetById), new { id = newCategory.CategoryId }, newCategory);
@@ -86,10 +84,8 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Nie znaleziono kategorii o id {id}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Kategoria o id {id} została usunięta.");
             return NoContent();
         }
     }
-
 }

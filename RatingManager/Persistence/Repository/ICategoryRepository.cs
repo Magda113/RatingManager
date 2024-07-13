@@ -11,8 +11,8 @@ namespace Persistence.Repository
     {
         Task<IEnumerable<Category>> GetAllAsync();
         Task<Category> GetByIdAsync(int id);
-        Task<int> AddAsync(Category entity);
-        Task<bool> UpdateAsync(Category entity);
+        Task<int> AddAsync(Category category);
+        Task<bool> UpdateAsync(Category category);
         Task<bool> DeleteAsync(int id);
         Task<Category> GetByNameAsync(string categoryName);
     }

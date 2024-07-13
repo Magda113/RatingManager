@@ -15,6 +15,5 @@ namespace Application.Services
         Task<GetCategoryDto> GetCategoryByIdAsync(int categoryId);
         Task<bool> UpdateCategoryAsync(int categoryId, UpdateCategoryDto updateDto);
         Task<bool> DeleteCategoryAsync(int categoryId);
-        
     }
 }

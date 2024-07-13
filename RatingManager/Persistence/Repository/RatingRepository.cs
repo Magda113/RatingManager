@@ -18,20 +18,11 @@ namespace Persistence.Repository
                 return await connection.QueryAsync<Rating>("SELECT * FROM Ratings");
             }
         }
-        public async Task<int> AddAsync(Rating entity)
+        public async Task<int> AddAsync(Rating rating)
         {
-            var sql = "";
-            if (_context is DapperContext)
-            {
-                sql = "INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (1, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(SCOPE_IDENTITY() as int)";
-            }
-            else
-            {
-                sql = "INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (1, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(last_insert_rowid() as int)";
-            }
             using (var connection = _context.CreateConnection())
             {
-                var id = await connection.QuerySingleAsync<int>(sql, entity);
+                var id = await connection.QuerySingleAsync<int>("INSERT INTO Ratings (Status, CreatedBy, CreatedAt, CallId, UserId, Safety, Knowledge, Communication, Creativity, TechnicalAspects, Result, CategoryId) VALUES (1, @CreatedBy, getdate(), @CallId, @UserId, @Safety, @Knowledge, @Communication, @Creativity, @TechnicalAspects, @Result, @CategoryId); SELECT CAST(SCOPE_IDENTITY() as int)", rating);
                 return id;
             }
         }
@@ -42,12 +33,12 @@ namespace Persistence.Repository
                 return await connection.QuerySingleOrDefaultAsync<Rating>("SELECT * FROM Ratings WHERE RatingId = @RatingId", new { RatingId = ratingId });
             }
         }
-        public async Task<bool> UpdateAsync(Rating entity)
+        public async Task<bool> UpdateAsync(Rating rating)
         {
             var sql = "UPDATE Ratings SET Status = @Status, ModifiedBy = @ModifiedBy, ModifiedAt = getdate(), CallId = @CallId, UserId = @UserId, Safety = @Safety, Knowledge = @Knowledge, Communication = @Communication, Creativity = @Creativity, TechnicalAspects = @TechnicalAspects,  Result = @Result, CategoryId = @CategoryId  WHERE RatingId = @RatingId";
             using (var connection = _context.CreateConnection())
             {
-                var affectedRows = await connection.ExecuteAsync(sql, entity);
+                var affectedRows = await connection.ExecuteAsync(sql, rating);
                 return affectedRows > 0;
             }
         }
@@ -59,7 +50,6 @@ namespace Persistence.Repository
                 return affectedRows > 0;
             }
         }
-
         public async Task<IEnumerable<Rating>> GetRatingsByCategoryNameAsync(string categoryName)
         {
             var sql = @"
@@ -73,8 +63,6 @@ namespace Persistence.Repository
                 return await connection.QueryAsync<Rating>(sql, new { CategoryName = categoryName });
             }
         }
-
-
         public async Task<IEnumerable<Rating>> GetRatingsByUserNameAsync(string userName)
         {
             var sql = @"

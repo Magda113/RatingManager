@@ -50,7 +50,7 @@ namespace Application.Auth
             {
                 return userId;
             }
-            throw new ArgumentException("Unable to retrieve UserId from token.");
+            throw new ArgumentException("Nie można otrzymać UserId z tokenu.");
         }
     }
 }

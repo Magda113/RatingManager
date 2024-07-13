@@ -11,6 +11,7 @@ namespace Application.DTO
     public class UpdateRatingDto
     {
         [Required]
+        [Display(Name = "Id")]
         public int RatingId { get; set; }
 
         [Required]

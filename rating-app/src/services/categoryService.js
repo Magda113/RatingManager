@@ -1,5 +1,3 @@
-// src/services/categoryService.js
-
 import { getToken } from './authService';
 
 const API_URL = 'https://localhost:7014/api/Category';
@@ -7,7 +5,7 @@ const API_URL = 'https://localhost:7014/api/Category';
 const getHeaders = () => {
     const token = getToken();
     if (!token) {
-        throw new Error('No token found, please log in first.');
+        throw new Error('Brak tokenu');
     }
     return {
         'Content-Type': 'application/json',
@@ -99,7 +97,7 @@ export const updateCategory = async (id, category) => {
             throw new Error(`Failed to update category: ${errorText}`);
         }
 
-        return true; // Zwrócenie flagi sukcesu
+        return true;
     } catch (error) {
         console.error(`Update category error for ${id}:`, error);
         throw new Error('Failed to update category');

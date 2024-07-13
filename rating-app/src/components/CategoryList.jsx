@@ -5,7 +5,6 @@ import { getAllCategories, getCategoryById,  deleteCategory } from '../services/
 const CategoryList = () => {
     const [categories, setCategories] = useState([]);
     const [searchId, setSearchId] = useState('');
-    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetchCategories();
@@ -16,8 +15,7 @@ const CategoryList = () => {
             const data = await getAllCategories();
             setCategories(data);
         } catch (error) {
-            console.error('Error fetching categories:', error);
-            setError('Błąd podczas pobierania kategorii');
+            console.error(error);
         }
     };
 
@@ -26,17 +24,16 @@ const CategoryList = () => {
             await deleteCategory(id);
             setCategories(categories.filter(category => category.categoryId !== id));
         } catch (error) {
-            console.error('Error deleting category:', error);
-            setError('Nie udało się usunąć kategorii');
+            console.error(error);
         }
     };
     const handleIdSearch = async () => {
         try {
             const data = await getCategoryById(searchId);
             setCategories([data]);
+            setSearchId('');
         } catch (error) {
             console.error(error);
-            setError('Błąd podczas wyszukiwania kategorii');
         }
     };
     return (
@@ -60,14 +57,13 @@ const CategoryList = () => {
                         <div><strong>Status:</strong> {category.status}</div>
                         <div><strong>Utworzone przez:</strong> {category.createdByUserName}</div>
                         <div><strong>Data utworzenia:</strong> {category.createdAt}</div>
-                        <div><strong>Zaktualizowane przez:</strong> {category.modifiedByUserName || 'N/A'}</div>
-                        <div><strong>Data aktualizacji:</strong> {category.modifiedAt || 'N/A'}</div>
+                        <div><strong>Zaktualizowane przez:</strong> {category.modifiedByUserName || 'brak'}</div>
+                        <div><strong>Data aktualizacji:</strong> {category.modifiedAt || 'brak'}</div>
                         <button onClick={() => handleDelete(category.categoryId)}>Usuń</button>
                         <Link to={`/categories/edit/${category.categoryId}`}>Edytuj</Link>
                     </li>
                 ))}
             </ul>
-            {error && <p>{error}</p>}
         </div>
     );
 };

@@ -94,7 +94,7 @@ export const updateUser = async (id, user) => {
             throw new Error(`Nie udało się zaktualizować użytkownika: ${response.status} - ${responseText}`);
         }
 
-        const data = responseText ? JSON.parse(responseText) : {}; // Parsowanie tylko jeśli jest tekst
+        const data = responseText ? JSON.parse(responseText) : {};
         console.log('Update successful, received data:', data);
         return data;
     } catch (error) {
@@ -116,7 +116,7 @@ export const deleteUser = async (id) => {
             throw new Error(`Nie udało się usunąć użytkownika: ${response.status} - ${errorText}`);
         }
 
-        return {}; // Return empty object or success message if needed
+        return {};
     } catch (error) {
         console.error(`Błąd usuwania użytkownika ${id}:`, error);
         throw new Error('Nie udało się usunąć użytkownika');

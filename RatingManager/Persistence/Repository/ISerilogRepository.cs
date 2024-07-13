@@ -11,8 +11,8 @@ namespace Persistence.Repository
     {
         Task<IEnumerable<SeriLog>> GetAllAsync();
         Task<SeriLog> GetByIdAsync(int id);
-        Task<int> AddAsync(SeriLog entity);
-        Task<bool> UpdateAsync(SeriLog entity);
+        Task<int> AddAsync(SeriLog seriLog);
+        Task<bool> UpdateAsync(SeriLog seriLog);
         Task<bool> DeleteAsync(int id);
     }
 }

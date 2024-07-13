@@ -12,6 +12,7 @@ namespace Application.DTO
     {
         [StringLength(255)]
         [Required]
+        [Display(Name = "Nazwa kategorii")]
         public string Name { get; set; }
     }
 }

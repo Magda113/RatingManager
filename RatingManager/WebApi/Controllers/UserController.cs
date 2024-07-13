@@ -29,7 +29,6 @@ namespace WebApi.Controllers
             return Ok(users);
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -64,14 +63,12 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Błędne zapytanie.");
                 return BadRequest();
             }
-
             var result = await _userService.UpdateUserAsync(id, userDto);
             if (!result)
             {
                 _logger.LogInformation($"Nie znaleziono użytkownika o id {id}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Użytkownik o id {id} został zaaktualizowany.");
             return NoContent();
         }
@@ -85,11 +82,8 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Nie znaleziono użytkownika o id {id}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Użytkownik o id {id} został usunięty.");
             return NoContent();
         }
-
     }
-
 }

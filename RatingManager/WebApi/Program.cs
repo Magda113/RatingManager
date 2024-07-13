@@ -17,20 +17,16 @@ namespace WebApi
             builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
                 loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration));
 
-            // Add services to the container.
-            
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RatingManager WebApi", Version = "v1" });
-                // Konfiguracja Swaggera do używania tokenów Bearer
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
-                    Description = "Proszę wprowadzić token JWT z prefiksem 'Bearer' w polu",
+                    Description = "Proszę wprowadzić token JWT z prefiksem 'Bearer'",
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
@@ -78,7 +74,7 @@ namespace WebApi
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder =>
-                    builder.WithOrigins("http://localhost:5206")
+                    builder.WithOrigins("http://localhost:5177")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -89,15 +85,12 @@ namespace WebApi
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseExceptionHandler("/api/error");
             }
             else
             {
-
                 app.UseExceptionHandler("/api/error");
             }
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -111,7 +104,6 @@ namespace WebApi
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

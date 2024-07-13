@@ -88,7 +88,7 @@ namespace Application.Services
 
             if (!Enum.TryParse<RatingStatus>(updateDto.Status, true, out var parsedStatus))
             {
-                throw new ArgumentException("Invalid status value");
+                throw new ArgumentException("Nie ma takiego statusu");
             }
 
             rating.Status = parsedStatus;

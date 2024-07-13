@@ -5,9 +5,6 @@ using Application.DTO;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -40,7 +37,6 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Nie znaleziono oceny o id {id}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Pobrano ocenę {ratingDto.RatingId}.");
             return Ok(ratingDto);
         }
@@ -62,14 +58,12 @@ namespace WebApi.Controllers
                 _logger.LogInformation("Błędne zapytanie.");
                 return BadRequest();
             }
-
             var result = await _ratingService.UpdateRatingAsync(id, updateDto);
             if (!result)
             {
                 _logger.LogInformation($"Nie znaleziono oceny o id {id}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Ocena o id {id} została zaktualizowana.");
             return NoContent();
         }
@@ -83,7 +77,6 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Nie znaleziono oceny o id {id}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Ocena o id {id} została usunięta");
             return NoContent();
         }
@@ -97,7 +90,6 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Nie ma ocen z kategorią {categoryName}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Otrzymano oceny z kategorią {categoryName}");
             return Ok(ratings);
         }
@@ -111,7 +103,6 @@ namespace WebApi.Controllers
                 _logger.LogInformation($"Nie ma ocen dla {userName}");
                 return NotFound();
             }
-
             _logger.LogInformation($"Otrzymano oceny dla {userName}");
             return Ok(ratings);
         }

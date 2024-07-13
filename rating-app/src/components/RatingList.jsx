@@ -1,62 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllRatings, getRatingById, deleteRating, searchRatingsByCategory, searchRatingsByUser } from '../services/ratingService';
 
 const RatingList = () => {
     const [ratings, setRatings] = useState([]);
-    const [error, setError] = useState(null);
     const [categoryName, setCategoryName] = useState('');
-    const [userId, setUserId] = useState('');
+    const [userName, setUserName] = useState('');
     const [searchId, setSearchId] = useState('');
 
     useEffect(() => {
+        const fetchRatings = async () => {
+            try {
+                const data = await getAllRatings();
+                setRatings(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
         fetchRatings();
     }, []);
 
-    const fetchRatings = async () => {
-        try {
-            const data = await getAllRatings();
-            setRatings(data);
-        } catch (error) {
-            console.error(error);
-            setError('Coś poszło nie tak');
-        }
-    };
     const handleDelete = async (id) => {
         try {
             await deleteRating(id);
             setRatings(ratings.filter(rating => rating.ratingId !== id));
         } catch (error) {
             console.error(error);
-            setError('Coś poszło nie tak');
         }
     };
     const handleIdSearch = async () => {
         try {
             const data = await getRatingById(searchId);
             setRatings([data]);
+            setSearchId('');
         } catch (error) {
             console.error(error);
-            setError('Błąd podczas wyszukiwania ocen');
         }
     };
     const handleCategorySearch = async () => {
         try {
             const data = await searchRatingsByCategory(categoryName);
             setRatings(data);
+            setCategoryName('');
         } catch (error) {
             console.error(error);
-            setError('Błąd podczas wyszukiwania ocen');
         }
     };
 
     const handleUserSearch = async () => {
         try {
-            const data = await searchRatingsByUser(userId);
+            const data = await searchRatingsByUser(userName);
             setRatings(data);
+            setUserName('');
         } catch (error) {
             console.error(error);
-            setError('Błąd podczas wyszukiwania ocen');
         }
     };
     return (
@@ -71,7 +68,7 @@ const RatingList = () => {
                 <button onClick={handleCategorySearch}>Szukaj po kategorii</button>
             </div>
             <div>
-                <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)}
+                <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)}
                        placeholder="Wyszukaj po użytkowniku"/>
                 <button onClick={handleUserSearch}>Szukaj po użytkowniku</button>
             </div>
@@ -98,15 +95,13 @@ const RatingList = () => {
                         <div><strong>Status oceny: </strong> {rating.status}</div>
                         <div><strong>Utworzona przez: </strong> {rating.createdByUserName}</div>
                         <div><strong>Data utworzenia: </strong> {rating.createdAt}</div>
-                        <div><strong>Zmodyfikowana przez: </strong> {rating.modifiedByUserName || 'N/A'}</div>
-                        <div><strong>Data modyfikacji: </strong> {rating.modifiedAt || 'N/A'}</div>
-
+                        <div><strong>Zmodyfikowana przez: </strong> {rating.modifiedByUserName || 'brak'}</div>
+                        <div><strong>Data modyfikacji: </strong> {rating.modifiedAt || 'brak'}</div>
                         <button onClick={() => handleDelete(rating.ratingId)}>Usuń</button>
                         <Link to={`/ratings/edit/${rating.ratingId}`}>Edytuj</Link>
                     </li>
                 ))}
             </ul>
-            {error && <p>{error}</p>}
         </div>
     );
 };
