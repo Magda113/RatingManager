@@ -15,7 +15,7 @@ const Login = ({ onLogin }) => {
             onLogin();
             navigate('/');
         } catch (error) {
-            console.error('Error: Login failed:', error);
+            console.error(error);
         }
     };
 

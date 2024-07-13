@@ -45,7 +45,7 @@ const UserList = () => {
                 <input type="text" value={searchId}
                        onChange={(e) => setSearchId(e.target.value)} // Updated to use searchId state
                        placeholder="Wyszukaj po id"/>
-                <button onClick={handleIdSearch}>Szukaj po id</button>
+                <button onClick={handleIdSearch}>Szukaj po id użytkownika</button>
             </div>
             <ul>
                 {users.map(user => (

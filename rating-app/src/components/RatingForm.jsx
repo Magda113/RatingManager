@@ -93,7 +93,7 @@ const RatingForm = () => {
                 </div>
                 {id && (
                     <div>
-                        <label>Status oceny: </label>
+                        <label>Status oceny (Robocza/ Opublikowana): </label>
                         <input name="status" value={rating.status} onChange={handleChange} required />
                     </div>
                 )}

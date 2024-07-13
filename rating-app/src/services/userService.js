@@ -115,7 +115,6 @@ export const deleteUser = async (id) => {
             const errorText = await response.text();
             throw new Error(`Nie udało się usunąć użytkownika: ${response.status} - ${errorText}`);
         }
-
         return {};
     } catch (error) {
         console.error(`Błąd usuwania użytkownika ${id}:`, error);

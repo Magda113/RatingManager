@@ -17,7 +17,7 @@ const CategoryForm = () => {
                     const data = await getCategoryById(id);
                     setCategory(data);
                 } catch (error) {
-                    console.error('Error fetching category:', error);
+                    console.error(error);
                 }
             };
 
@@ -56,7 +56,7 @@ const CategoryForm = () => {
                 </div>
                 {id && (
                     <div>
-                        <label>Status: </label>
+                        <label>Status (Nieaktywna/ Aktywna): </label>
                         <input name="status" value={category.status} onChange={handleChange} required />
                     </div>
                 )}

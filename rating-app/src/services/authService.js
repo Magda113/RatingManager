@@ -21,7 +21,6 @@ export const login = async (username, password) => {
         console.log('Received token:', token);
         localStorage.setItem('token', token);
         console.log('Token saved in localStorage:', token);
-
         return token;
     } catch (error) {
         console.error('Login error:', error);

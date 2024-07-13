@@ -83,7 +83,6 @@ const App = () => {
                         </li>
                     </ul>
                 </nav>
-
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/ratings" element={<RatingList/>}/>

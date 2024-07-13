@@ -72,7 +72,6 @@ export const updateRating = async (id, rating) => {
             const errorText = await response.text();
             throw new Error(`Failed to update rating: ${errorText}`);
         }
-
         return true;
     } catch (error) {
         console.error(`Update rating error for ${id}:`, error);

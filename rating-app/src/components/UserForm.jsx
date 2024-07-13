@@ -60,7 +60,7 @@ const UserForm = () => {
                     <input name="email" value={user.email} onChange={handleChange} required />
                 </div>
                 <div>
-                    <label>Rola</label>
+                    <label>Rola (Użytkownik/ Administrator)</label>
                     <input name="role" value={user.role} onChange={handleChange} required />
                 </div>
                 <div>

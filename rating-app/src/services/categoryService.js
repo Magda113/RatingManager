@@ -13,7 +13,6 @@ const getHeaders = () => {
     };
 };
 
-
 export const getAllCategories = async () => {
     const headers = getHeaders();
     try {
